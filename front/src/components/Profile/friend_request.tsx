@@ -83,7 +83,6 @@ export function Friends() {
             },
         });
         const data = await response.json();
-        setFriendReq((prevFriendReq) => prevFriendReq.filter((req) => req.id !== id));
         // console.log("Data :", data);
         let str : string = "They" + " are now your friend!";
         swal("Congrats", str, "success");
@@ -100,7 +99,8 @@ export function Friends() {
             },
         });
         const data = await response.json();
-        setFriendReq(prevState => prevState.filter(declined => declined.id !== id));
+        setUpdateFriend(prevFlag => !prevFlag);
+        console.log("data = ", data)
         let str : string = "You declined " + "their" + " friend request!"
         swal("Congrats", str, "success");
         socket.emit("RequestDeclined", data.id);

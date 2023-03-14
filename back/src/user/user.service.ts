@@ -516,6 +516,7 @@ export class UserService {
     });
     if (!myUser)
       return (false);
+    // return true ou false si on trouve l'id du friend dans friend
     return (myUser.friends.some(friend => friend.id == friendId));
   }
 

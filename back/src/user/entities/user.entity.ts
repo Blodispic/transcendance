@@ -2,6 +2,7 @@ import { Results } from "../../results/entities/results.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { Channel } from "src/chat/channel/entities/channel.entity";
 import { FriendRequest } from "./friend-request.entity";
+import { Exclude } from "class-transformer";
 
 @Entity('user')
 export class User {
@@ -25,6 +26,7 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
+  @Exclude()
   two_factor_secret: string;
 
   @Column({ nullable: true })

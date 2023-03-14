@@ -15,6 +15,7 @@ import { JwtGuard } from 'src/Oauth/jwt-auth.guard';
 import { Server, Socket } from "socket.io";
 import { userList } from 'src/app.gateway';
 import { WebSocketServer } from '@nestjs/websockets';
+import { plainToClass } from 'class-transformer';
 
 
 
@@ -28,23 +29,13 @@ export class UserController {
   @Post()
   @UseGuards(JwtGuard)
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    // try {
-    return await this.userService.create(createUserDto);
-    // } catch (error) 
-    // throw new BadRequestException(error.detail);
-    // }
+    return await plainToClass(User, this.userService.create(createUserDto));
   }
 
   @Get()
   @UseGuards(JwtGuard)
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Post()
-  @UseGuards(JwtGuard)
-  createUser(@Body() user: CreateUserDto) {
-    return this.userService.create(user)
+  async findAll() {
+    return await plainToClass(User, this.userService.findAll());
   }
 
   @Post('results')
@@ -55,26 +46,26 @@ export class UserController {
 
   @Get('username/:username')
   @UseGuards(JwtGuard)
-  GetbyUsername(@Param('username') username: string) {
-    return this.userService.getByUsername(username);
+  async GetbyUsername(@Param('username') username: string) {
+    return await plainToClass(User, this.userService.getByUsername(username));
   }
 
   @Get('id/:id')
   @UseGuards(JwtGuard)
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.getById(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await plainToClass(User, this.userService.getById(id));
   }
 
   @Get('game/:id')
   @UseGuards(JwtGuard)
   async getResult(@Param('id', ParseIntPipe) id: number) {
-    return await this.userService.getResults(id)
+    return await plainToClass(Results, this.userService.getResults(id));
   }
 
   @Post('access_token')
   @UseGuards(JwtGuard)
-  GetbyAccessToken(@Body() token: any) {
-    return this.userService.GetByAccessToken(token);
+  async GetbyAccessToken(@Body() token: any) {
+    return await plainToClass(User, this.userService.GetByAccessToken(token));
   }
 
   @Post('2fa/qrcode')
@@ -184,7 +175,7 @@ export class UserController {
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: string, @Body() user: any) {
-    return this.userService.update(+id, user);
+    return plainToClass(User, this.userService.update(+id, user));
   }
 
   @Delete(':id')
@@ -201,7 +192,7 @@ export class UserController {
 
   @Delete('deletefriend/:id')
   async deleteFriend(@Param('id', ParseIntPipe) id: number, @Body() friend: User) {
-    return await this.userService.removeFriend(id, friend);
+    return await plainToClass(User, this.userService.removeFriend(id, friend));
   }
 
   @Post('block/:id')
